@@ -1,0 +1,27 @@
+처음부터 쉬운 사용법
+
+1. 고객용 프로그램 실행
+- AI_ENGINE_V70_LICENSE_INTEGRATED_FINAL.py 실행
+- 경고창 확인
+- PC 코드 확인
+- 기간제 또는 수익 10% 선택
+- 고객이 PC 코드를 판매자에게 보냄
+
+2. 판매자용 키 만들기
+- alice_key_generator_gui.py 실행
+- 이름 입력
+- 고객이 보낸 PC 코드 입력
+- 기간제면 1~30일 입력
+- 수익 10%면 수익 10% 선택
+- 키 생성 버튼 클릭
+- 키 복사 버튼 클릭
+- 고객에게 키를 보냄
+
+3. 고객이 키 입력
+- 고객 프로그램에서 키 입력
+- 인증 완료되면 기존 AI Engine Alice V70가 그대로 실행됨
+
+파일 설명
+- AI_ENGINE_V70_LICENSE_INTEGRATED_FINAL.py : 원본 엔진 + 보안 통합 최종본
+- alice_key_generator_gui.py : 판매자용 GUI 키 생성기
+- license_server_config.template.json : 무료 서버(Firebase) 연결 예시

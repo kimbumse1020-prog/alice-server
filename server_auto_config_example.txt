@@ -1,0 +1,3 @@
+AUTO_SERVER_URL = "http://내서버주소:8000"
+AUTO_SERVER_TOKEN = "관리자토큰"
+AUTO_SERVER_REQUIRED = True

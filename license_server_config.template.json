@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "base_url": "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  "client_token": ""
+}
