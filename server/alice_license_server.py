@@ -1,67 +1,51 @@
-
-from flask import Flask, jsonify, request, render_template_string, redirect
-import datetime as dt, json
+from flask import Flask, jsonify, request
+import json
 from pathlib import Path
 
 app = Flask(__name__)
+
 BASE = Path(__file__).resolve().parent
 DB_PATH = BASE / "allowed_clients.json"
 
 def load_db():
     if not DB_PATH.exists():
-        DB_PATH.write_text(json.dumps({"clients":{}}, indent=2))
+        DB_PATH.write_text(json.dumps({"clients": {}}, indent=2))
     return json.loads(DB_PATH.read_text())
 
 def save_db(db):
     DB_PATH.write_text(json.dumps(db, indent=2))
 
+@app.route("/")
+def home():
+    return jsonify({"message": "alice license server running", "ok": True})
+
 @app.post("/api/v1/license/check")
 def check():
     db = load_db()
     data = request.json
-    pc = data.get("pc_code","")
+    pc = data.get("pc_code", "")
 
     if pc not in db["clients"]:
-        db["clients"][pc] = {"blocked":False}
+        db["clients"][pc] = {"blocked": False}
 
     if db["clients"][pc]["blocked"]:
-        return jsonify({"ok":False,"message":"차단"})
+        return jsonify({"ok": False, "message": "차단"})
 
     save_db(db)
-    return jsonify({"ok":True})
+    return jsonify({"ok": True})
 
-HTML = '''
-<h2>관리</h2>
-<table border=1>
-<tr><th>PC</th><th>상태</th><th>액션</th></tr>
-{% for pc,d in clients.items() %}
-<tr>
-<td>{{pc}}</td>
-<td>{{"차단" if d.blocked else "사용중"}}</td>
-<td><a href="/block/{{pc}}">차단</a> | <a href="/unblock/{{pc}}">해제</a></td>
-</tr>
-{% endfor %}
-</table>
-'''
-
+# 🔥 관리자 페이지 추가
 @app.get("/admin")
 def admin():
     db = load_db()
-    return render_template_string(HTML, clients=db["clients"])
+    clients = db.get("clients", {})
 
-@app.get("/block/<pc>")
-def block(pc):
-    db = load_db()
-    db["clients"][pc]["blocked"]=True
-    save_db(db)
-    return redirect("/admin")
+    html = "<h1>관리자 페이지</h1><br>"
+    for k, v in clients.items():
+        status = "차단됨" if v.get("blocked") else "정상"
+        html += f"<p>{k} : {status}</p>"
 
-@app.get("/unblock/<pc>")
-def unblock(pc):
-    db = load_db()
-    db["clients"][pc]["blocked"]=False
-    save_db(db)
-    return redirect("/admin")
+    return html
 
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
